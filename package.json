@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "amazon": "^0.0.0",
+    "amazon-cognito-identity-js": "^6.3.7",
+    "cognito": "^0.0.1",
     "graphql": "^16.8.1",
     "next": "14.0.4",
     "react": "^18",

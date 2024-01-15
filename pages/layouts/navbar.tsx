@@ -1,3 +1,4 @@
+import Link from "next/link";
 
 
 export default function navbar(){
@@ -10,7 +11,7 @@ export default function navbar(){
             <ul className="flex gap-5 font-semibold">
                 <li>Search</li>
                 <li>Login</li>
-                <li>Register</li>
+                <li><Link href="/about">Register</Link></li>
                 <li>About</li>
             </ul>
         </nav>

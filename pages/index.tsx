@@ -1,11 +1,23 @@
-import { fetchTrending } from "./api/trendingAnime";
-import { fetchPopular } from './api/popularAnime';
+import { fetchTrending } from "../app/api/trendingAnime";
+import { fetchPopular } from '../app/api/popularAnime';
+import { useEffect, useState } from "react";
 
 
+export default function Home() {
+  const [trend, setTrend]: any = useState()
+  const [popular, setPopular]: any = useState()
 
-export default async function Home() {
-  const trend = await fetchTrending()
-  const popular = await fetchPopular()
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setTrend(await fetchTrending())
+        setPopular(await fetchPopular())
+      } catch(err) {
+        console.log(err)
+      }
+    }
+    fetchData();
+  },[])
 
   return (
     <div className="px-10">
