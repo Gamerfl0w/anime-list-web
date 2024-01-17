@@ -8,6 +8,7 @@ export default function Home() {
   const [popular, setPopular]: any = useState()
   const { data: session, status} = useSession()
 
+  // fix html tags in the description
   useEffect(() => {
     async function fetchData() {
       try {
@@ -22,10 +23,10 @@ export default function Home() {
 
   return (
     <div className="px-10">
-      <div className="h-[85vh] flex justify-center items-center flex-col font-extrabold pt-[15vh]">
-        <p className="text-4xl 2xl:xl:text-5xl text-center">From classics to hidden gems, discover your</p>
-        <p className="text-4xl 2xl:xl:text-5xl text-center">next anime obsession here.</p>
-        <button onClick={() => signOut()}>Sign out</button>
+      <div className="h-[85vh] flex justify-center items-center flex-col font-extrabold pt-[15vh] text-[#EEEEEE]">
+        <p className="text-[2.5rem] leading-snug 2xl:xl:text-5xl text-center">From classics to hidden gems, discover your</p>
+        <p className="text-[2.5rem] leading-snug 2xl:xl:text-5xl text-center">next anime obsession here</p>
+        {/* <button onClick={ () => signOut() }>Sign out</button> */}
       </div>
 
       <main>
@@ -96,8 +97,8 @@ export default function Home() {
           <div className="flex justify-center items-center gap-5">
               <p className="w-1/2 font-extrabold">Take Anime List with you. Add an anime to a collection, review shows, and so much more!</p>
 
-            <button onClick={() => signIn()} className="font-semibold p-4 bg-[#222831] text-xl rounded-2xl">Log In</button>
-            <button onClick={() => signIn()} className="font-semibold p-4 bg-[#222831] text-xl rounded-2xl">Sign Up</button>
+            <button onClick={ () => signIn() } className="font-semibold p-4 bg-[#222831] text-xl rounded-2xl">Log In</button>
+            <button onClick={ () => signIn() } className="font-semibold p-4 bg-[#222831] text-xl rounded-2xl">Sign Up</button>
           </div>
         </div>
         : ''

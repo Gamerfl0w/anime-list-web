@@ -7,24 +7,23 @@ export default function Navbar(){
     return (
         <nav className="fixed w-full flex justify-around items-center bg-[#393E46] p-5 text-white flex-wrap z-50">
             <div>
-                <p className="font-extrabold text-xl">Anime List</p>
+                <p className="font-extrabold text-2xl">Anime List</p>
             </div>
 
-            <ul className="flex gap-5 font-semibold">
-                <li>Home</li>
+            <ul className="flex gap-5 font-semibold text-lg">
+                <Link href="/"><li>Home</li></Link>
                 <li>Search</li>
                 { status !== 'authenticated' ?
-                    <div>
-                        <li className="cursor-pointer" onClick={() => signIn()}>Login</li>
-                        <li className="cursor-pointer" onClick={() => signIn()}>Register</li>
+                    <div className="flex gap-5">
+                        <li className="cursor-pointer" onClick={ () => signIn() }>Sign In</li>
                     </div>
                     // add user icon here
                     // figure out where to put log out button
                 :   <div>  
-                        <li>{session.user?.name}</li>
+                        <li>{ session.user?.name }</li>
                     </div>
                 }
-                <li>About</li>
+                <Link href="/about"><li>About</li></Link>
             </ul>
         </nav>
     )
