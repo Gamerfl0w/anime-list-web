@@ -35,7 +35,7 @@ export default function Home() {
         </div>
         <section className="flex flex-wrap justify-center gap-5 mb-5 px-5">
           {trend && trend.data.Page.media.map((item: any, i: any) => (
-            <article key={i} className="rounded-2xl mx-auto max-w-[18%] shadow-xl bg-cover bg-center min-h-32 max-h-96 transform duration-500 hover:-translate-y-2 cursor-pointer group" 
+            <article key={i} className="rounded-2xl mx-auto max-w-[230px] shadow-xl bg-cover bg-center min-h-32 max-h-96 transform duration-500 hover:-translate-y-2 cursor-pointer group" 
               style={{ backgroundImage: `url(${item.coverImage.large})` }}>
               <div className="bg-black h-full rounded-2xl bg-opacity-20 min-h-32 px-10 flex flex-wrap flex-col pt-10 hover:bg-opacity-75 transform duration-300">
                 <h1 className="text-white text-[20px] mb-3 transform translate-y-20 group-hover:translate-y-0 duration-300" style={{textShadow: `black 0.1em 0.1em 0.2em`}}>

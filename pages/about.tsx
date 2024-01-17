@@ -3,11 +3,11 @@ import Image from 'next/image'
 export default function About(){
     return (
         <div className="flex flex-col justify-center items-center w-full h-screen pt-[10vh] px-[10%]">
-            <div className='float-start flex flex-start items-center w-full h-full mr-10 text-7xl 2xl:text-[9rem] font-extrabold opacity-40'>
+            <div className='float-start flex flex-start items-center w-full mt-3 text-7xl font-extrabold opacity-40'>
                 <p>About</p>
             </div>
             <div className='w-full h-full flex justify-center items-start my-5 gap-[10%]'>
-                <div className='h-[70vh] w-[400px] relative flex-shrink-0'>
+                <div className='h-full w-[400px] relative flex-shrink-0 max-h-[500px]'>
                     <Image
                         src="/Retard.png"
                         alt="Picture of the developer"
