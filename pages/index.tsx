@@ -1,5 +1,4 @@
-import { fetchTrending } from "./api/trendingAnime";
-import { fetchPopular } from './api/popularAnime';
+import { animeListData } from "./api/fetchData";
 import { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 
@@ -8,12 +7,58 @@ export default function Home() {
   const [popular, setPopular]: any = useState()
   const { data: session, status} = useSession()
 
+  const trendingQuery: string =`query ($page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        total
+        perPage
+      }
+      media(sort: TRENDING_DESC) {
+        id
+        title {
+          romaji
+          english
+          native
+        }
+        description
+        type
+        genres
+        coverImage {
+          large
+        }
+      }
+    }
+  }`
+
+  const popularQuery: string = `query ($page: Int, $perPage: Int) {
+    Page(page: $page, perPage: $perPage) {
+      pageInfo {
+        total
+        perPage
+      }
+      media(sort: POPULARITY_DESC) {
+        id
+        title {
+          romaji
+          english
+          native
+        }
+        description
+        type
+        genres
+        coverImage {
+          large
+        }
+      }
+    }
+  }`
+
   // fix html tags in the description
   useEffect(() => {
     async function fetchData() {
       try {
-        setTrend(await fetchTrending())
-        setPopular(await fetchPopular())
+        setTrend(await animeListData(trendingQuery))
+        setPopular(await animeListData(popularQuery))
       } catch(err) {
         console.log(err)
       }
@@ -26,10 +71,11 @@ export default function Home() {
       <div className="h-[85vh] flex justify-center items-center flex-col font-extrabold pt-[15vh] text-[#EEEEEE]">
         <p className="text-[2.5rem] leading-snug 2xl:xl:text-5xl text-center">From classics to hidden gems, discover your</p>
         <p className="text-[2.5rem] leading-snug 2xl:xl:text-5xl text-center">next anime obsession here</p>
-        {/* <button onClick={ () => signOut() }>Sign out</button> */}
       </div>
 
       <main>
+        {/* why didnt I made this into a resusable component, they're just the same :retard: */}
+        {/* make this a resusable component */}
         <div className="pb-5">
           <p className="text-3xl font-semibold text-[#EEEEEE]">Trending</p>
         </div>
@@ -47,13 +93,10 @@ export default function Home() {
                    : item.title.english
                   }
                 </h1>
-                <p className="min-w-0 text-ellipsis  opacity-0 pb-3 text-white text-sm group-hover:opacity-85 transform duration-500" style={{textShadow: `black 0.1em 0.1em 0.2em`}}>
-                  {
-                    item.description.length > 200
+                   <p dangerouslySetInnerHTML={{__html: item.description.length > 200
                     ? `${item.description.substring(0, 200)}...` 
-                    : item.description.substring(0, 200) 
-                  }
-                </p>
+                    : item.description.substring(0, 200) }} 
+                    className="min-w-0 text-ellipsis  opacity-0 pb-3 text-white text-sm group-hover:opacity-85 transform duration-500" style={{textShadow: `black 0.1em 0.1em 0.2em`}} />
               </div>
             </article>
             ))
@@ -66,7 +109,7 @@ export default function Home() {
         </div>
         <section className="flex flex-wrap justify-center gap-5 mb-5 px-5">
           {popular && popular.data.Page.media.map((item: any, i: any) => (
-            <article key={i} className="rounded-2xl mx-auto max-w-[18%] shadow-xl bg-cover bg-center min-h-32 max-h-96 transform duration-500 hover:-translate-y-2 cursor-pointer group" 
+            <article key={i} className="rounded-2xl mx-auto max-w-[230px] shadow-xl bg-cover bg-center min-h-32 max-h-96 transform duration-500 hover:-translate-y-2 cursor-pointer group" 
               style={{ backgroundImage: `url(${item.coverImage.large})` }}>
               <div className="bg-black h-full rounded-2xl bg-opacity-20 min-h-32 px-10 flex flex-wrap flex-col pt-10 hover:bg-opacity-75 transform duration-300">
                 <h1 className=" text-white text-[20px] mb-3 transform translate-y-20 group-hover:translate-y-0 duration-300" style={{textShadow: `black 0.1em 0.1em 0.2em`}}>
@@ -78,13 +121,10 @@ export default function Home() {
                    : item.title.english
                 }
                 </h1>
-                <p className="opacity-0 pb-3 text-white text-sm group-hover:opacity-85 transform duration-500" style={{textShadow: `black 0.1em 0.1em 0.2em`}}>
-                  {
-                    item.description.length > 200
+                <p dangerouslySetInnerHTML={{__html: item.description.length > 200
                     ? `${item.description.substring(0, 200)}...` 
-                    : item.description.substring(0, 200) 
-                  }
-                </p>
+                    : item.description.substring(0, 200) }} 
+                    className="min-w-0 text-ellipsis  opacity-0 pb-3 text-white text-sm group-hover:opacity-85 transform duration-500" style={{textShadow: `black 0.1em 0.1em 0.2em`}} />
               </div>
             </article>
             ))
@@ -101,7 +141,14 @@ export default function Home() {
             <button onClick={ () => signIn() } className="font-semibold p-4 bg-[#222831] text-xl rounded-2xl">Sign Up</button>
           </div>
         </div>
-        : ''
+        :
+        <div className="mt-[10vh] h-36 w-full bg-[#00ADB5] rounded-t-2xl p-10 text-2xl 2xl:xl:text-3xl">
+          <div className="flex justify-center items-center gap-5">
+              <p className="w-1/2 font-extrabold">{`Welcome, ${session.user?.name}.`} <p>Thanks for signing in.</p></p>
+
+            <button onClick={ () => signOut() } className="font-semibold p-4 bg-[#222831] text-xl rounded-2xl">Log Out</button>
+          </div>
+        </div>
       }
 
     </div>
