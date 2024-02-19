@@ -3,7 +3,7 @@ import { MongoClient, ServerApiVersion  } from 'mongodb';
 export default async function GetList(req: any, res: any) {
   if (req.method === 'POST') {
     const { email } = req.body;
-    const client = new MongoClient(process.env.MONGODB_URI, {
+    const client = new MongoClient(process.env.MONGODB_URI!, {
         serverApi: {
             version: ServerApiVersion.v1,
             strict: true,

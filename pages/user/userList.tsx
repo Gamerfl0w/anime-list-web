@@ -7,16 +7,19 @@ import 'animate.css';
 
 export default function UserList() {
   const [list, setList]: any = useState()
-  const { data: session } = useSession()
+  const { data: session, status } = useSession()
 
   const getUserList = async (email: string | null | undefined) => {
-      const res = await fetch('/api/user/getList', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email }),
-      });
-
-      return res.json()
+      if(status === 'authenticated'){
+        const res = await fetch('/api/user/getList', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email }),
+        });
+        return res.json()
+      } else {
+        window.location.href = '/'
+      }
   };
 
   useEffect(() => {
