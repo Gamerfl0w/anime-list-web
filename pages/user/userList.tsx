@@ -3,22 +3,35 @@ import { useEffect, useState } from 'react';
 import Icon from '@mdi/react';
 import { mdiMinus } from '@mdi/js';
 import 'animate.css';
+import Notif from '../components/notification'
 
 
 export default function UserList() {
   const [list, setList]: any = useState()
+  const [notif, setNotif]: any = useState(false)
   const { data: session, status } = useSession()
 
   const getUserList = async (email: string | null | undefined) => {
-      if(status === 'authenticated'){
-        const res = await fetch('/api/user/getList', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email }),
-        });
-        return res.json()
+    const res = await fetch('/api/user/getList', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email }),
+    });
+    return res.json()
+  };
+
+  const deleteAnime = async (email: string | null | undefined, id: string) => {
+      const res = await fetch('/api/user/deleteFromList', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, id: id }),
+      });
+      
+      if(res.ok){
+        setList(await getUserList(session?.user?.email))
+        setNotif(true)
       } else {
-        window.location.href = '/'
+        alert('something went wrong')
       }
   };
 
@@ -35,11 +48,12 @@ export default function UserList() {
 
     return(
       <div className='pt-[15vh] pb-5'>
+        {notif && <Notif msg="Anime removed from list" isSuccess={true} />}
           <h1 className='text-center text-5xl opacity-40 font-semibold'>{`${session?.user?.name}'s List`}</h1>
           <main className='mt-10 w-full flex flex-wrap justify-center items-center gap-5'>
          { list && list.map((item: any, i: any) => (
             <div key={i} className='animate__animated animate__fadeInRight group cursor-pointer h-[350px] w-[170px] sm:w-[200px] flex flex-col rounded-2xl bg-[#00ADB5] hover:shadow-md shadow-black flex-shrink-0'>
-            <div className='relative opacity-0 group-hover:opacity-100'>
+            <div onClick={() => deleteAnime(session?.user?.email, item.data)} className='relative opacity-0 group-hover:opacity-100'>
               <div className='absolute right-2 top-2 p-1 bg-slate-500 transform translate-x-[20px] group-hover:translate-x-0 duration-300 hover:bg-slate-700 rounded-md'>
                 <Icon path={mdiMinus} size={1} color={"#fff"} />
               </div>

@@ -1,12 +1,14 @@
 import Icon from '@mdi/react';
 import { mdiPlus } from '@mdi/js';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+import Notif from '../components/notification'
 
 export default function Cards({ email, data, title }: any){
-  const addSuccess = (msg: string) => toast.success(msg);
-  const addError = (msg: string) => toast.error(msg);
+  const [notif, setNotif]: any = useState(false)
+  const [msg, setMsg]: any = useState('')
+  const [isSuccess, setIsSuccess]: any = useState(false)
+  const { status } = useSession()
 
   const addToList = async (email: string, data: string, img: string, title: string, details: string) => {
     const response = await fetch('/api/user/saveToList', {
@@ -18,24 +20,23 @@ export default function Cards({ email, data, title }: any){
     });
 
     if (response.ok) {
-      addSuccess("Successfully added to your list")
+      setMsg("Successfully added to your list.")
+      setIsSuccess(true)
+      setNotif(true)
     } else {
-      addError("Anime already added to your list.")
+      setMsg("This anime is already in your list.")
+      setIsSuccess(false)
+      setNotif(true)
     }
+
+    setTimeout(function(){
+      setNotif(false)
+    }, 3000);
   };
 
     return(
         <div>
-          <ToastContainer position="top-right"
-            autoClose={3000}
-            hideProgressBar
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="dark" />
+          {notif && <Notif msg={msg} isSuccess={isSuccess} />}
 
           <div className="pb-5">
             <p className="text-3xl font-semibold text-[#EEEEEE]">{ title }</p>
@@ -46,13 +47,16 @@ export default function Cards({ email, data, title }: any){
                 style={{ backgroundImage: `url(${item.coverImage.large})` }}>
                 <div className="bg-black h-full rounded-2xl bg-opacity-20 min-h-32 px-10 flex flex-wrap flex-col pt-10 hover:bg-opacity-75 transform duration-300">
                   
-                  <div className="absolute top-2 right-2">
-                    <button onClick={ () => addToList(email, item.id, item.coverImage.large, 
-                      item.title.english == null ? item.title.romaji : item.title.english,
-                        item.description) } className='hidden group-hover:block p-1 float-right bg-slate-500 transform hover:bg-slate-700 duration-300 rounded-md'>
-                      <Icon path={mdiPlus} size={1} />
-                    </button>
-                  </div>
+                  {
+                    status === 'authenticated' && 
+                    <div className="absolute top-2 right-2">
+                      <button onClick={ () => addToList(email, item.id, item.coverImage.large, 
+                        item.title.english == null ? item.title.romaji : item.title.english,
+                          item.description) } className='hidden group-hover:block p-1 float-right bg-slate-500 transform hover:bg-slate-700 duration-300 rounded-md'>
+                        <Icon path={mdiPlus} size={1} />
+                      </button>
+                    </div>
+                  }
 
                   <h1 className="text-white text-[20px] text-ellipsis break-words overflow-hidden max-h-16 mb-3 transform translate-y-20 group-hover:translate-y-0 duration-300" style={{textShadow: `black 0.1em 0.1em 0.2em`}}>
                     {
