@@ -2,6 +2,7 @@ import { animeListData } from "./api/fetchData";
 import { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Cards from "./components/cards"
+import 'animate.css';
 
 export default function Home() {
   const [trend, setTrend]: any = useState()
@@ -75,9 +76,9 @@ export default function Home() {
       </div>
 
       <main>
-        <Cards data={trend} title="Trending" />
+        <Cards email={session?.user?.email} data={trend}  title="Trending" />
         <div className="mt-10"></div>
-        <Cards data={popular} title="Popular" /> 
+        <Cards email={session?.user?.email} data={popular}  title="All Time Popular" /> 
       </main>
 
       { status !== 'authenticated' ?
@@ -92,8 +93,7 @@ export default function Home() {
         :
         <div className="mt-[10vh] h-36 w-full bg-[#00ADB5] rounded-t-2xl p-10 text-2xl 2xl:xl:text-3xl">
           <div className="flex justify-center items-center gap-5">
-              <p className="w-1/2 font-extrabold">{`Welcome, ${session.user?.name}.`} <p>Thanks for signing in.</p></p>
-
+            <p className="w-1/2 font-extrabold">{`Welcome, ${session.user?.name}.`} <span className="block">Thanks for signing in.</span></p>
             <button onClick={ () => signOut() } className="font-semibold p-4 bg-[#222831] text-xl rounded-2xl">Log Out</button>
           </div>
         </div>

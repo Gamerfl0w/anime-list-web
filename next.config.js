@@ -5,6 +5,7 @@ const nextConfig = {
         COGNITO_CLIENT_ID:process.env.COGNITO_CLIENT_ID,
         COGNITO_REGION:process.env.COGNITO_REGION,
         COGNITO_ISSUER: process.env.COGNITO_ISSUER,
+        MONGODB_URI: process.env.MONGODB_URI,
     }
 }
 

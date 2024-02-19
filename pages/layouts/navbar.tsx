@@ -20,7 +20,7 @@ export default function Navbar(){
                     // add user icon here
                     // figure out where to put log out button
                 :   <div>  
-                        <li>{ session.user?.name }</li>
+                        <Link href="/user/userList"><li>{ session.user?.name }</li></Link>
                     </div>
                 }
                 <Link href="/about"><li>About</li></Link>
