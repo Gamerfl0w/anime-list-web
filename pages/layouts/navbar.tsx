@@ -1,8 +1,15 @@
-import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link"
 
-export default function Navbar(){
-    const { data: session, status } = useSession()
+export default function Navbar({ user }: { user?: any }) {
+
+    async function handleSignOut() {
+        const res = await fetch("/api/auth/logout", { method: "POST" })
+        if (res.ok) {
+            window.location.href = "/" // redirect after logout
+        } else {
+            console.error("Logout failed")
+        }
+    }
 
     return (
         <nav className="fixed w-full flex justify-around items-center bg-[#393E46] p-5 text-white flex-wrap z-50">
@@ -13,16 +20,16 @@ export default function Navbar(){
             <ul className="flex gap-5 font-semibold text-lg">
                 <Link href="/"><li>Home</li></Link>
                 <li>Search</li>
-                { status !== 'authenticated' ?
+                {!user ? (
                     <div className="flex gap-5">
-                        <li className="cursor-pointer" onClick={ () => signIn() }>Sign In</li>
+                        <Link href="/login"><li>Sign In</li></Link>
                     </div>
-                    // add user icon here
-                    // figure out where to put log out button
-                :   <div>  
-                        <Link href="/user/userList"><li>{ session.user?.name }</li></Link>
+                ) : (
+                    <div className="flex gap-5">
+                        <Link href="/user/userList"><li>{user.email}</li></Link>
+                        <button onClick={() => handleSignOut()}>Sign Out</button>
                     </div>
-                }
+                )}
                 <Link href="/about"><li>About</li></Link>
             </ul>
         </nav>

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Cards from "./components/cards"
 import 'animate.css';
+import { createClient } from '@/utils/supabase/server-props'
+import type { GetServerSideProps } from 'next'
 
 export default function Home() {
   const [trend, setTrend]: any = useState()
@@ -101,4 +103,11 @@ export default function Home() {
 
     </div>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const supabase = createClient(ctx)
+  const { data: { user } } = await supabase.auth.getUser()
+
+  return { props: { user } }
 }
