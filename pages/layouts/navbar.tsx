@@ -14,7 +14,7 @@ export default function Navbar({ user }: { user?: any }) {
     return (
         <nav className="fixed w-full flex justify-around items-center bg-[#393E46] p-5 text-white flex-wrap z-50">
             <div>
-                <p className="font-extrabold text-2xl">Anime List</p>
+                <Link href="/" className="font-extrabold text-2xl">Anime List</Link>
             </div>
 
             <ul className="flex gap-5 font-semibold text-lg">
@@ -22,12 +22,12 @@ export default function Navbar({ user }: { user?: any }) {
                 <li>Search</li>
                 {!user ? (
                     <div className="flex gap-5">
-                        <Link href="/login"><li>Sign In</li></Link>
+                        <Link href="/auth/login"><li>Login</li></Link>
                     </div>
                 ) : (
                     <div className="flex gap-5">
                         <Link href="/user/userList"><li>{user.email}</li></Link>
-                        <button onClick={() => handleSignOut()}>Sign Out</button>
+                        <button onClick={() => handleSignOut()}>Logout</button>
                     </div>
                 )}
                 <Link href="/about"><li>About</li></Link>
