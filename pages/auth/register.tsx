@@ -11,6 +11,8 @@ export default function RegistrationPage() {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [username, setUsername] = useState('')
+    const [data, setData] = useState<any>(null)
     const [emailError, setEmailError] = useState('')
     const [passwordError, setPasswordError] = useState('')
     const [errorMsg, setErrorMsg] = useState('')
@@ -56,7 +58,7 @@ export default function RegistrationPage() {
         return null;
     }
 
-    function checkForServerErrors(serverError: string, authType?: string) {
+    async function checkForServerErrors(serverError: string, authType?: string) {
         setLoading(true)
 
         if (serverError && !authType) {
@@ -64,10 +66,20 @@ export default function RegistrationPage() {
             setLoading(false)
             return
         } else {
-            if (authType === 'signUp') {
-                verifyEmailModal()
+            if (authType === 'signUp' && data) {
+                const user = data;
+
+                const { error: profileError } = await supabase
+                    .from("profiles")
+                    .update({ username })
+                    .eq("id", user.id);
+                if (profileError) {
+                    setErrorMsg(profileError.message)
+                } else {
+                    verifyEmailModal()
+                }
             } else {
-                router.push('/')
+                // router.push('/')
             }
         }
     }
@@ -76,12 +88,32 @@ export default function RegistrationPage() {
         setErrorMsg('')
         setEmailError('')
         setPasswordError('')
+
         if (checkForErrors() === null) {
-            const { error } = await supabase.auth.signUp({ email, password })
-            // server check for errors
-            checkForServerErrors(error?.message || '', 'signUp')
+            const { data: signUpData, error } = await supabase.auth.signUp({ email, password });
+
+            if (error) {
+                setErrorMsg(error.message);
+                return;
+            }
+
+            const user = signUpData.user;
+            if (!user) return;
+
+            const { error: profileError } = await supabase
+                .from("profiles")
+                .update({ username })
+                .eq("id", user.id);
+
+            if (profileError) {
+                setErrorMsg(profileError.message);
+            } else {
+                localStorage.setItem("username", username);
+                verifyEmailModal();
+            }
         }
     }
+
 
     function verifyEmailModal() {
         modals.openConfirmModal({
@@ -113,6 +145,13 @@ export default function RegistrationPage() {
 
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                 <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+                    <div>
+                        <label htmlFor="username" className="block text-sm/6 font-medium text-gray-100">Username</label>
+                        <div className="mt-2">
+                            <input id="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder='Username' className="block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline-1 -outline-offset-1 outline-white/10 placeholder:text-gray-500 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-500 sm:text-sm/6" />
+                        </div>
+                    </div>
+
                     <div>
                         <label htmlFor="email" className="block text-sm/6 font-medium text-gray-100">Email address</label>
                         <div className="mt-2">

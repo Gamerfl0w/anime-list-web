@@ -67,16 +67,42 @@ export default function LoginPage() {
     }
 
     async function logIn() {
-        setErrorMsg('')
-        setEmailError('')
-        setPasswordError('')
+        setErrorMsg('');
+        setEmailError('');
+        setPasswordError('');
+
         if (checkForErrors() === null) {
-            const { error } = await supabase.auth.signInWithPassword({ email, password })
-            // server check for errors
-            checkServerError(error?.message || '')
-            setLoading(false)
+            const { data: signInData, error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
+
+            if (error) {
+                checkServerError(error.message);
+                setLoading(false);
+                return;
+            }
+
+            const user = signInData.user;
+            if (user) {
+                const { data: profile, error: profileError } = await supabase
+                    .from('profiles')
+                    .select('username')
+                    .eq('id', user.id)
+                    .single();
+
+                if (profileError) {
+                    console.error('Error fetching profile:', profileError.message);
+                } else {
+                    localStorage.setItem('username', profile.username);
+                }
+            }
+
+            setLoading(false);
+            router.push('/')
         }
     }
+
 
     return (
         <div className="flex h-screen flex-col justify-center items-center px-6 py-12 lg:px-8">

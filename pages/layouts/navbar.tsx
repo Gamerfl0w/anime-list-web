@@ -1,6 +1,13 @@
 import Link from "next/link"
+import { useEffect, useState } from "react"
 
 export default function Navbar({ user }: { user?: any }) {
+    const [username, setUsername] = useState<string | null>(null);
+
+    useEffect(() => {
+        const cachedUsername = localStorage.getItem("username");
+        setUsername(cachedUsername);
+    }, []);
 
     async function handleSignOut() {
         const res = await fetch("/api/auth/logout", { method: "POST" })
@@ -20,17 +27,17 @@ export default function Navbar({ user }: { user?: any }) {
             <ul className="flex gap-5 font-semibold text-lg">
                 <Link href="/"><li>Home</li></Link>
                 <li>Search</li>
+                <Link href="/about"><li>About</li></Link>
                 {!user ? (
                     <div className="flex gap-5">
                         <Link href="/auth/login"><li>Login</li></Link>
                     </div>
                 ) : (
                     <div className="flex gap-5">
-                        <Link href="/user/userList"><li>{user.email}</li></Link>
+                        <Link href="/user/userList"><li>{username}</li></Link>
                         <button onClick={() => handleSignOut()}>Logout</button>
                     </div>
                 )}
-                <Link href="/about"><li>About</li></Link>
             </ul>
         </nav>
     )

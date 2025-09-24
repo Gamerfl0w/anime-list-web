@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 export default function About(){
     return (
-        <div className="flex flex-col justify-center items-center w-full h-screen pt-[10vh] px-[10%]">
+        <div className="flex flex-col justify-center items-center w-full h-screen pt-[10vh] px-[10%] text-white">
             <div className='float-start flex flex-start items-center w-full mt-3 text-7xl font-extrabold opacity-40'>
                 <p>About</p>
             </div>
