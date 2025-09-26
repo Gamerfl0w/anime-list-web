@@ -7,6 +7,7 @@ export default function Navbar({ user }: { user?: any }) {
     useEffect(() => {
         const cachedUsername = localStorage.getItem("username");
         setUsername(cachedUsername);
+        // console.log("User:", user);
     }, []);
 
     async function handleSignOut() {

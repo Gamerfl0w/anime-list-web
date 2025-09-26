@@ -4,6 +4,7 @@ import { createClient } from '@/utils/supabase/component'
 import Link from 'next/link'
 import { Button, Stack, Text } from '@mantine/core';
 import { useModals } from '@mantine/modals';
+import Spinner from '../components/spinner';
 
 export default function RegistrationPage() {
     const router = useRouter()
@@ -184,11 +185,7 @@ export default function RegistrationPage() {
                     <Link href="/auth/login" onClick={signUp} className="font-bold text-[#00adb5] hover:text-[#dae3e4] ml-3">Login here</Link>
                 </p>
             </div>
-            {
-                loading && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                </div>
-            }
+            <Spinner loading={loading} />
         </div>
     )
 }

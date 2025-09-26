@@ -1,7 +1,7 @@
 export const animeListData = async (query: string, pageNum: number = 1) => {
     let variables = {
         page: pageNum,
-        perPage: 5,
+        perPage: 12,
       };
     
       const res = await fetch('https://graphql.anilist.co', {

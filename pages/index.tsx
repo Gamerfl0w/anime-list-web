@@ -83,9 +83,9 @@ export default function Home({ user }: { user?: any }) {
       </div>
 
       <main>
-        <Cards email={session?.user?.email} data={trend}  title="Trending" />
+        <Cards data={trend} title="Trending" auth={user} />
         <div className="mt-10"></div>
-        <Cards email={session?.user?.email} data={popular}  title="All Time Popular" /> 
+        <Cards data={popular} title="All Time Popular" auth={user} /> 
       </main>
 
       {/* footer */}
